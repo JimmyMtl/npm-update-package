@@ -1,4 +1,4 @@
-update-npm-pkg
+Update NPM packages
 ---
 
 An interactive CLI tool to update outdated packages in your project. The tool supports multiple package managers: npm,
@@ -35,7 +35,7 @@ npm install
 npm link
 ```
 
-You can now use the `update-npm` command in your terminal.
+You can now use the `update-pkg` command in your terminal.
 
 ---
 
@@ -44,7 +44,7 @@ You can now use the `update-npm` command in your terminal.
 Run the CLI tool in your project directory:
 
 ```bash
-update-npm
+update-pkg
 ```
 
 ## Step
@@ -62,7 +62,7 @@ update-npm
 1. Start CLI
 
 ```bash
-update-npm
+update-pkg
 ```
 
 2. Select package manager
@@ -112,3 +112,18 @@ Outdated Packages:
 # Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+---
+
+# Easter Egg
+
+For advanced users, you can run the tools via the following commands:
+
+```bash
+update-npm-pkg
+```
+or
+
+```bash
+unp
+```

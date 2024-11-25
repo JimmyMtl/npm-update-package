@@ -14,7 +14,9 @@
     "inquirer": "^12.1.0"
   },
   "bin": {
-    "update-npm-pkg": "index.js"
+    "update-npm-pkg": "index.js",
+    "update-pkg": "index.js",
+    "unp": "index.js"
   },
   "type": "module"
 }
