@@ -17,7 +17,7 @@ yarn, and pnpm.
 
 # Installation
 
-1. Install the dependencies:
+Install the dependencies:
 
 ```bash
 npm install npm-update-pkg
