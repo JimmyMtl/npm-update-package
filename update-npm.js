@@ -23,11 +23,19 @@ const getOutdatedPackages = (packageManager) => {
     }
 };
 
-const updatePackage = (packageManager, packageName) => {
+const updatePackage = (packageManager, packageName, versionType) => {
+    const versionFlags = {
+        major: '@latest',
+        minor: '@^',
+        patch: '@~',
+    };
+
+    const versionFlag = versionFlags[versionType] || versionFlags.patch;
+
     const installCommands = {
-        npm: `npm install ${packageName}@latest`,
-        yarn: `yarn add ${packageName}@latest`,
-        pnpm: `pnpm add ${packageName}@latest`,
+        npm: `npm install ${packageName}${versionFlag}`,
+        yarn: `yarn add ${packageName}${versionFlag}`,
+        pnpm: `pnpm add ${packageName}${versionFlag}`,
     };
 
     if (!packageName || typeof packageName !== 'string') {
@@ -36,7 +44,7 @@ const updatePackage = (packageManager, packageName) => {
     }
 
     try {
-        console.log(chalk.blue(`Updating ${packageName} with ${packageManager}...`));
+        console.log(chalk.blue(`Updating ${packageName} to ${versionType} version with ${packageManager}...`));
         execSync(installCommands[packageManager], { stdio: 'inherit' });
         console.log(chalk.green(`${packageName} updated successfully!`));
     } catch (error) {
@@ -75,6 +83,19 @@ async function main() {
         }))
     );
 
+    const { versionType } = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'versionType',
+            message: 'What version type do you want to update to?',
+            choices: [
+                { name: 'Major (latest version)', value: 'major' },
+                { name: 'Minor (compatible versions)', value: 'minor' },
+                { name: 'Patch (bug fixes only)', value: 'patch' },
+            ],
+        },
+    ]);
+
     const answers = await inquirer.prompt([
         {
             type: 'checkbox',
@@ -91,18 +112,18 @@ async function main() {
     ]);
 
     if (answers.updateAll) {
-        console.log(chalk.blue(`Updating all packages with ${packageManager}...`));
+        console.log(chalk.blue(`Updating all packages to ${versionType} versions with ${packageManager}...`));
 
         const updateAllCommands = {
-            npm: 'npm update',
-            yarn: 'yarn upgrade',
-            pnpm: 'pnpm update',
+            npm: `npm update`,
+            yarn: `yarn upgrade`,
+            pnpm: `pnpm update`,
         };
 
         execSync(updateAllCommands[packageManager], { stdio: 'inherit' });
         console.log(chalk.green('All packages updated successfully!'));
     } else if (answers.selectedPackages.length > 0) {
-        answers.selectedPackages.forEach((pkg) => updatePackage(packageManager, pkg));
+        answers.selectedPackages.forEach((pkg) => updatePackage(packageManager, pkg, versionType));
     } else {
         console.log(chalk.yellow('No packages selected for update.'));
     }
