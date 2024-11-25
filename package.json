@@ -1,5 +1,5 @@
 {
-  "name": "npm-update-package",
+  "name": "update-npm-pkg",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "inquirer": "^12.1.0"
   },
   "bin": {
-    "update-npm": "./update-npm.js"
+    "update-npm-pkg": "index.js"
   },
   "type": "module"
 }
