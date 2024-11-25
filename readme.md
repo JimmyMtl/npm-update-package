@@ -1,4 +1,4 @@
-npm-update-package
+update-npm-pkg
 ---
 
 An interactive CLI tool to update outdated packages in your project. The tool supports multiple package managers: npm,
