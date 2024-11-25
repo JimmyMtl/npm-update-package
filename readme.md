@@ -17,22 +17,10 @@ yarn, and pnpm.
 
 # Installation
 
-1. Clone the repository:
+1. Install the dependencies:
 
 ```bash
-git clone git@github.com:JimmyMtl/npm-update-package.git
-```
-
-2. Install the dependencies:
-
-```bash
-npm install
-```
-
-3. Link the package:
-
-```bash
-npm link
+npm install npm-update-package
 ```
 
 You can now use the `update-pkg` command in your terminal.
