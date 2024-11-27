@@ -89,12 +89,18 @@ Outdated Packages:
 > npm install @types/node@16.18.3
 > ```
 
-5. Update all or specific packages:
+
+5. Or update all or specific packages:
 
 ```bash
-✔ Do you want to update all packages instead? No
+✔ Do you want to update all packages instead (no by default)? No
 ```
 
+> [!TIP]
+> The tool will simply run the following command to update all packages:
+> ```bash
+> npm update
+> ```
 --- 
 
 # Supported Commands
