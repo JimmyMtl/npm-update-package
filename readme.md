@@ -20,7 +20,7 @@ yarn, and pnpm.
 Install the package:
 
 ```bash
-npm install -g npm-update-pkg
+npm install -g update-npm-pkg
 ```
 
 You can now use the `update-pkg` command in your terminal.
