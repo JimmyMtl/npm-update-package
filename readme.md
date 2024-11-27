@@ -82,6 +82,13 @@ Outdated Packages:
 ◯ @types/node
 ```
 
+> [!TIP]
+> Behind the scenes, the tool runs the following command for each selected package:
+> ```bash
+> npm install lodash@4.18.0
+> npm install @types/node@16.18.3
+> ```
+
 5. Update all or specific packages:
 
 ```bash
@@ -110,6 +117,7 @@ For advanced users, you can run the tools via the following commands:
 ```bash
 update-npm-pkg
 ```
+
 or
 
 ```bash
