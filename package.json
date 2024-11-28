@@ -3,7 +3,10 @@
   "version": "1.1.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "run": "node dist/index.js",
+    "run:dev": "node ./index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,9 +17,13 @@
     "inquirer": "^12.1.0"
   },
   "bin": {
-    "update-npm-pkg": "index.js",
-    "update-pkg": "index.js",
-    "unp": "index.js"
+    "update-npm-pkg": "./dist/index.js",
+    "update-pkg": "./dist/index.js",
+    "unp": "./dist/index.js"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2"
+  }
 }

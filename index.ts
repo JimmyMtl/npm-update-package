@@ -1,10 +1,18 @@
 #!/usr/bin/env node
 
-import { execSync } from 'child_process';
+import {execSync} from 'child_process';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 
-const getOutdatedPackages = (packageManager) => {
+// Define types for version and package manager
+type VersionType = 'major' | 'minor' | 'patch';
+type PackageManager = 'npm' | 'yarn' | 'pnpm';
+
+// Define a global process type
+const process = global.process;
+
+// Function to fetch outdated packages
+const getOutdatedPackages = (packageManager: PackageManager): Record<string, any> => {
     try {
         const command = {
             npm: 'npm outdated --json',
@@ -12,19 +20,20 @@ const getOutdatedPackages = (packageManager) => {
             pnpm: 'pnpm outdated --json',
         }[packageManager];
 
-        const result = execSync(command, { encoding: 'utf8' });
+        const result = execSync(command, {encoding: 'utf8'});
         return JSON.parse(result);
-    } catch (error) {
+    } catch (error: any) {
         if (error.stdout) {
             return JSON.parse(error.stdout);
         }
         console.error(chalk.red('Failed to fetch outdated packages.'));
-        process.exit(1);
+        return process.exit(1);
     }
 };
 
-const updatePackage = (packageManager, packageName, versionType) => {
-    const versionFlags = {
+// Function to update a specific package
+const updatePackage = (packageManager: PackageManager, packageName: string, versionType: VersionType): void => {
+    const versionFlags: Record<VersionType, string> = {
         major: '@latest',
         minor: '@^',
         patch: '@~',
@@ -32,7 +41,7 @@ const updatePackage = (packageManager, packageName, versionType) => {
 
     const versionFlag = versionFlags[versionType] || versionFlags.patch;
 
-    const installCommands = {
+    const installCommands: Record<PackageManager, string> = {
         npm: `npm install ${packageName}${versionFlag}`,
         yarn: `yarn add ${packageName}${versionFlag}`,
         pnpm: `pnpm add ${packageName}${versionFlag}`,
@@ -45,18 +54,20 @@ const updatePackage = (packageManager, packageName, versionType) => {
 
     try {
         console.log(chalk.blue(`Updating ${packageName} to ${versionType} version with ${packageManager}...`));
-        execSync(installCommands[packageManager], { stdio: 'inherit' });
+        execSync(installCommands[packageManager], {stdio: 'inherit'});
         console.log(chalk.green(`${packageName} updated successfully!`));
-    } catch (error) {
+    } catch (error: any) {
         console.error(chalk.red(`Failed to update ${packageName}:`));
         console.error(chalk.red(error.message));
     }
 };
 
-async function main() {
+async function main(): Promise<void> {
     console.log(chalk.cyan('Checking for outdated packages...\n'));
 
-    const { packageManager } = await inquirer.prompt([
+    const {packageManager} = await inquirer.prompt<{
+        packageManager: PackageManager;
+    }>([
         {
             type: 'list',
             name: 'packageManager',
@@ -83,20 +94,25 @@ async function main() {
         }))
     );
 
-    const { versionType } = await inquirer.prompt([
+    const {versionType} = await inquirer.prompt<{
+        versionType: VersionType;
+    }>([
         {
             type: 'list',
             name: 'versionType',
             message: 'What version type do you want to update to?',
             choices: [
-                { name: 'Major (latest version)', value: 'major' },
-                { name: 'Minor (compatible versions)', value: 'minor' },
-                { name: 'Patch (bug fixes only)', value: 'patch' },
+                {name: 'Major (latest version)', value: 'major'},
+                {name: 'Minor (compatible versions)', value: 'minor'},
+                {name: 'Patch (bug fixes only)', value: 'patch'},
             ],
         },
     ]);
 
-    const answers = await inquirer.prompt([
+    const answers = await inquirer.prompt<{
+        selectedPackages: string[];
+        updateAll: boolean;
+    }>([
         {
             type: 'checkbox',
             name: 'selectedPackages',
@@ -114,19 +130,22 @@ async function main() {
     if (answers.updateAll) {
         console.log(chalk.blue(`Updating all packages to ${versionType} versions with ${packageManager}...`));
 
-        const updateAllCommands = {
+        const updateAllCommands: Record<PackageManager, string> = {
             npm: `npm update`,
             yarn: `yarn upgrade`,
             pnpm: `pnpm update`,
         };
-
-        execSync(updateAllCommands[packageManager], { stdio: 'inherit' });
+        execSync(updateAllCommands[packageManager], {stdio: 'inherit'});
         console.log(chalk.green('All packages updated successfully!'));
     } else if (answers.selectedPackages.length > 0) {
-        answers.selectedPackages.forEach((pkg) => updatePackage(packageManager, pkg, versionType));
+        answers.selectedPackages.forEach((pkg: string) => updatePackage(packageManager, pkg, versionType));
     } else {
         console.log(chalk.yellow('No packages selected for update.'));
     }
 }
 
-main();
+main().catch((error) => {
+    console.error(chalk.red('An error occurred during execution:'));
+    console.error(error);
+    process.exit(1);
+});
