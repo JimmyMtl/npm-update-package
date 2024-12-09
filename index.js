@@ -33,7 +33,7 @@ const updatePackage = (packageManager, packageName, versionType) => {
     const versionFlag = versionFlags[versionType] || versionFlags.patch;
 
     const installCommands = {
-        npm: `npm install ${packageName}${versionFlag}`,
+        npm: `npm install ${packageName}${versionFlag} --force`,
         yarn: `yarn add ${packageName}${versionFlag}`,
         pnpm: `pnpm add ${packageName}${versionFlag}`,
     };
